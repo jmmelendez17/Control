@@ -1,0 +1,32 @@
+import matplotlib.pyplot as plt
+from scipy import signal
+import control as ct
+import numpy as np
+
+# Create a transfer function (you can also use state-space or other representations)
+numerator = [1,1 ]  # Coefficients of the numerator polynomial
+denominator = [1, 6, 13, 20, 0]  # Coefficients of the denominator polynomial
+sys = ct.TransferFunction(numerator, denominator)
+print(sys)
+
+# Plot poles and zeros
+plt.figure()
+ct.pzmap(sys)
+
+# Customize plot (optional)
+plt.grid(True)
+plt.title('Mapa de polos y ceros')
+plt.ylabel('Imaginario (jw)')
+plt.xlabel('real (s)')
+plt.show()
+
+# Plot the root locus
+plt.figure()
+ct.root_locus(sys, kvect=np.linspace(0, 1000, 1000))
+plt.title('gráfico de lugar de las raices')
+plt.xlabel('real (s)')
+plt.xlim([-6,2])
+plt.ylim([-4,4])
+plt.ylabel('Imaginario (jw)')
+plt.grid(True)
+plt.show()
