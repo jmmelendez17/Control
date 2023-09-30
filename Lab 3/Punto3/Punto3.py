@@ -16,14 +16,19 @@ st.write("Polinomio ingresado (orden descendente):", polynomial_input)
 print(coefficients)
 #Definir longitud del polinomio
 n=len(coefficients)
+epsilon = 1e-10 
+CE=0
+C0=0
 
 print (n)
 
 #Definir dimensión de la matriz
 if n %2==0: 
     Longmat=int(n/2)
+    z=0 #Es par
 else: 
     Longmat=int((n+1)/2)
+    z=1
 
 print (Longmat)
 
@@ -34,8 +39,14 @@ print (matriz)
 for j in range (0, Longmat):
     matriz[0, j] = coefficients[2*j]
 
-for j in range (0, Longmat-1):
-    matriz[1, j] = coefficients[(2*j)+1]
+    if z==1:
+        for j in range (0, Longmat-1):
+            matriz[1, j] = coefficients[(2*j)+1]
+    else:
+        for j in range (0, Longmat):
+            matriz[1, j] = coefficients[(2*j)+1]
+
+
 
 print(matriz)
 
@@ -43,14 +54,23 @@ for i in range (2, n):
     for j in range (0, Longmat):
         if j + 1 < Longmat:
            matriz[i,j]= ((matriz[i-1,j]*matriz[i-2,j+1])- (matriz[i-2, j] * matriz[i-1,j+1]))/matriz[i-1,j]
+           CS=0 #caso especial
+           if abs(matriz[i, 0]) == 0:
+               if sum(matriz[i]) == 0 and Longmat> i<n-1:
+                   for j in range (0, Longmat-1):
+                     matriz[i,j]=matriz[i-1,j]*((n-1-i)-(2*j))
+                   C0=1
+               else:
+                 matriz[i, 0] = epsilon
+                 CE=1
+
 
 for i in range(2, n):
     for j in range(Longmat):
         if matriz[i, j] is None:
             matriz[i, j] = 0
 
-#Caso especial
-CS=0
+
 
 # Identificar cambios de signo en la primera columna
 cambios_signo_primera_columna = 0
@@ -61,12 +81,21 @@ for i in range(1, n):  # Empezamos desde la segunda fila
 
 
 # Mostrar la matriz
-st.write("Matriz:")
+st.write("Arreglo de Routh:")
 st.write(matriz)
 if cambios_signo_primera_columna==0:
     st.write("No hay raices inestables en el sistema.")
 else:
     st.write(f"Hay {cambios_signo_primera_columna} raíces inestables en el sistema.")
+
+if CE==1:
+    st.write("Se aplica el caso especial de Epsilon.")
+else:
+    if C0==1:
+        st.write("Se aplica el caso especial del polinomio")
+    else:
+            if CS==0:
+                st.write("No se aplican casos especiales.")
 
 
 
