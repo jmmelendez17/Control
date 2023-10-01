@@ -8,7 +8,7 @@ st.title("Calculadora de estabilidad por el criterio de Ruth")
 st.write("Esta aplicación despliega el arreglo de Routh, el polinomio característico, el mapa de polos del sistemay da detalles sobre la estabilidad del mismo")
 
 # Obtener el polinomio en orden descendente del usuario
-polynomial_input = st.text_input("Polinomio en orden descendente (coeficientes separados por coma)", "1 ,2, 3, 4, 5")
+polynomial_input = st.text_input("Por favor, ingrese su polinomio en orden descendente y separado por comas como en el ejemplo siguiente:", "1 ,2, 3, 4, 5")
 coefficients = [float(coeff.strip()) for coeff in polynomial_input.split(',')]
 
 st.write("Polinomio ingresado (orden descendente):", polynomial_input)
@@ -56,10 +56,19 @@ for i in range (2, n):
            matriz[i,j]= ((matriz[i-1,j]*matriz[i-2,j+1])- (matriz[i-2, j] * matriz[i-1,j+1]))/matriz[i-1,j]
            CS=0 #caso especial
            if abs(matriz[i, 0]) == 0:
-               if sum(matriz[i]) == 0 and Longmat> i<n-1:
-                   for j in range (0, Longmat-1):
-                     matriz[i,j]=matriz[i-1,j]*((n-1-i)-(2*j))
-                   C0=1
+               if sum(matriz[i]) == 0 and Longmat > i < n-1:
+                    d = i
+                    C0 = 1   
+                    for j in range(Longmat):
+                        matriz[d, j] = matriz[d-1, j] * ((n-d) - (2*j))
+                        for i in range (d+1, n):
+                            for j in range (0, Longmat):
+                                if j + 1 < Longmat:
+                                 matriz[i,j]= ((matriz[i-1,j]*matriz[i-2,j+1])- (matriz[i-2, j] * matriz[i-1,j+1]))/matriz[i-1,j]
+                                
+                        
+                   
+                    
                else:
                  matriz[i, 0] = epsilon
                  CE=1
@@ -92,13 +101,13 @@ if CE==1:
     st.write("Se aplica el caso especial de Epsilon.")
 else:
     if C0==1:
-        st.write("Se aplica el caso especial del polinomio")
+        st.write("Se aplica el caso especial del polinomio auxiliar")
     else:
             if CS==0:
                 st.write("No se aplican casos especiales.")
 
 
-
+print(matriz)
 # Create a transfer function (you can also use state-space or other representations)
 numerator = [1]  # Coefficients of the numerator polynomial
 denominator = coefficients  # Coefficients of the denominator polynomial
