@@ -11,7 +11,30 @@ st.write("Esta aplicación despliega el arreglo de Routh, el polinomio caracter�
 polynomial_input = st.text_input("Por favor, ingrese su polinomio en orden descendente y separado por comas como en el ejemplo siguiente:", "1 ,2, 3, 4, 5")
 coefficients = [float(coeff.strip()) for coeff in polynomial_input.split(',')]
 
-st.write("Polinomio ingresado (orden descendente):", polynomial_input)
+st.write("su polinomio característico es:")
+def format_polynomial_term(coeff, power):
+    sign = '+' if coeff >= 0 else '-'
+    coeff_abs = abs(coeff)
+
+    if coeff_abs == 0:
+        return ''
+    elif power == 0:
+        return f"{sign}{int(coeff_abs)}"
+    elif power == 1:
+        return f"{sign}{int(coeff_abs)}s"
+    else:
+        return f"{sign}{int(coeff_abs)}s^{power}"
+
+def polynomial_to_latex(coefficients):
+    n = len(coefficients)
+    polynomial_latex = "P(s) = " + ''.join(format_polynomial_term(coefficients[i], n - i - 1) for i in range(n) if coefficients[i] != 0)
+
+    return polynomial_latex
+
+# Mostrar el polinomio ingresado con formato LaTeX
+polynomial_latex = polynomial_to_latex(coefficients)
+st.latex(polynomial_latex)
+
 
 print(coefficients)
 #Definir longitud del polinomio
@@ -90,12 +113,22 @@ for i in range(1, n):  # Empezamos desde la segunda fila
 
 
 # Mostrar la matriz
+# Convertir la matriz a una cadena formateada
+
 st.write("Arreglo de Routh:")
-st.write(matriz)
+matriz_latex = "\\begin{bmatrix}\n"
+for i in range(n):
+    matriz_latex += " & ".join([f"{int(np.round(matriz[i, j]))}" if not np.isnan(matriz[i, j]) else ' ' for j in range(Longmat)])
+    matriz_latex += " \\\\\n"
+matriz_latex += "\\end{bmatrix}"
+
+# Mostrar la matriz en formato LaTeX
+st.latex(matriz_latex)
+
 if cambios_signo_primera_columna==0:
     st.write("No hay raices inestables en el sistema.")
 else:
-    st.write(f"Hay {cambios_signo_primera_columna} raíces inestables en el sistema.")
+    st.write(f"Hay {cambios_signo_primera_columna} raiz/raíces inestables en el sistema.")
 
 if CE==1:
     st.write("Se aplica el caso especial de Epsilon.")
@@ -127,4 +160,4 @@ plt.xlabel('Real (s)')
 # Mostrar el gráfico en Streamlit
 st.pyplot(plt)
 
-# Construir el polinomio en términos de S
+
