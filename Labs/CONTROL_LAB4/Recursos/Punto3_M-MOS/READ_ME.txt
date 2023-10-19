@@ -1,0 +1,1 @@
+Recuerde que, como se trata de una aplicación con una interfaz gráfica, debe iniciar una nueva terminal y escribir el comando 'streamlit run punto3.py' para poder visulizar la app web local de manera satisfactoria.
