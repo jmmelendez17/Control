@@ -135,3 +135,41 @@ plt.xlabel('Reales')
 plt.ylabel('Imaginarios')
 plt.grid(True)
 plt.show()
+
+X = 41.69
+sys2 = ct.tf ([X,X], [1,7,20,50, 0]) ; #función de transferencia
+print(sys2)
+ws, mags, phases = ct.bode_plot(sys2, omega=frequencies, dB=True, color='purple')
+plt.grid(True)
+plt.suptitle('Diagrama de Bode - lazo abierto', fontsize=28, fontweight='bold')
+plt.tight_layout()
+plt.subplots_adjust(top=0.88)
+# Personalizar etiquetas de los ejes
+plt.subplots_adjust(hspace=0.4)
+plt.show()
+
+
+sys1 = ct.tf ([X,X], [1,7,20,50+X,X]) ; #función de transferencia
+print(sys1)
+ws, mags, phases = ct.bode_plot(sys1, omega=frequencies, dB=True, color='purple')
+plt.grid(True)
+plt.suptitle('Diagrama de Bode - lazo cerrado', fontsize=28, fontweight='bold')
+plt.tight_layout()
+plt.subplots_adjust(top=0.88)
+# Personalizar etiquetas de los ejes
+plt.subplots_adjust(hspace=0.4)
+plt.show()
+response = ct.step_response(sys1) ; #Escalón unitario
+u = lambda t: np.heaviside(t,1)
+t = np.linspace(0, 28, 10000)
+Escalon = u(t)
+plt.plot(response.time, response.outputs, label='respuesta del sistema', color='purple', linestyle='dashed')
+plt.plot(t, Escalon, label='Impulso unitario', color='red')
+plt.grid(True)
+plt.suptitle('Respuesta al Escalón', fontsize=28, fontweight='bold')
+plt.tight_layout()
+plt.subplots_adjust(top=0.88)
+plt.legend()
+# Personalizar etiquetas de los ejes
+plt.subplots_adjust(hspace=0.4)
+plt.show()

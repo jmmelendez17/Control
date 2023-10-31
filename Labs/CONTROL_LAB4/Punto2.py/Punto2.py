@@ -37,7 +37,7 @@ if uploaded_file is not None:
         magnitud_en_frecuencia = None
 
         for i, fase in enumerate(Phase):
-            if abs(fase + 180) == 0 :
+            if abs(fase + 180) < 1 and abs(fase + 180) > -1 :
                 frecuencia_con_fase_minus_180 = Frec[i]
                 magnitud_en_frecuencia = Mag[i]
                 break
@@ -61,9 +61,9 @@ if uploaded_file is not None:
         phasenmar=round(180+Fase_en_frec,3)
 
         ##Constantes de error
-        Kp = 1 / Mag[0]  # Error de posición
-        Kv = 1 / (Mag[0] * Frec[0])  # Error de velocidad
-        Ka = 1 / (Mag[0] * Frec[0]** 2)  # Error de aceleración
+        Kp = Mag[0]  # Error de posición
+        Kv = (Mag[0] * Frec[0])  # Error de velocidad
+        Ka = (Mag[0] * Frec[0]** 2)  # Error de aceleración
         print(Kp)
         print(Kv)
         print(Ka)
@@ -90,6 +90,7 @@ if uploaded_file is not None:
         ax_phase.set_title('Respuesta del sistema experimental (Fase)')
         if frecuencia_con_mag_1 is not None:
             ax_phase.vlines(x=frecuencia_con_mag_1, ymin=-180, ymax=Fase_en_frec, linestyles='dashed', color='Green', label='Margen de fase')
+            ax_phase.hlines(y=-180, xmin=0, xmax=frecuencia_con_mag_1, linestyles='dashed', color='Green')
         ax_phase.legend()
         ax_phase.grid(which='both', linestyle='--')
 
@@ -111,28 +112,28 @@ if uploaded_file is not None:
             if gainmar is not None:
                 st. write(f"El margen de ganancia del sistema es de {gainmar} dB")
             else:
-                st.write("el margen de ganancia es infinito")
+                st.write("el margen de ganancia tiende a infinito")
             
-            if Kp>5:
+            if Kp>20:
                 st.write("La constante de error estático de posición es aproximadamente infinito")
             else:
                 if Kp< 0.01:
                     st.write("La constante de error estático de posición es aproximadamente 0")
                 else:
                     st.write(f"la constante de error estática de posición es {round(Kp, 3)}")
-            if Kv>5:
+            if Kv>20:
                 st.write("La constante de error estático de velocidad es aproximadamente infinito")
             else:
                 if Kv< 0.01:
                     st.write("La constante de error estático de velocidad es aproximadamente 0")
                 else:
-                    st.write(f"la constante de error estática de velocidad es {round(Kp, 3)}")
-            if Ka>5:
+                    st.write(f"la constante de error estática de velocidad es {round(Kv, 3)}")
+            if Ka>20:
                 st.write("La constante de error estático de aceleración es aproximadamente infinito")
             else:
                 if Ka< 0.01:
                     st.write("La constante de error estático de aceleración es aproximadamente 0")
                 else:
-                    st.write(f"la constante de error estática de aceleración es {round(Kp, 3)}")
+                    st.write(f"la constante de error estática de aceleración es {round(Ka, 3)}")
 
             
