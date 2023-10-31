@@ -60,6 +60,16 @@ if uploaded_file is not None:
         
         phasenmar=round(180+Fase_en_frec,3)
 
+        #Ancho de banda
+        Bandwidth = None
+        MagBD= None
+
+        for i, magnitud in enumerate(Mag):
+            if Mag[0]-Mag[i] >= 3:
+                Bandwidth = round(Frec[i], 3)
+                MagBD= round(Mag[i], 3)
+                break
+
         ##Constantes de error
         Kp = Mag[0]  # Error de posición
         Kv = (Mag[0] * Frec[0])  # Error de velocidad
@@ -75,8 +85,10 @@ if uploaded_file is not None:
         ax_mag.set_title('Respuesta del sistema experimental (Magnitud)')
         if frecuencia_del_pico is not None:
             ax_mag.vlines(x=frecuencia_del_pico, ymin=Mag[len(Mag)-1], ymax=Pico, linestyles='dashed', color='red', label='Frecuencia de resonancia')
-        if frecuencia_con_mag_1 is not None:
-            ax_mag.hlines(y=0, xmin=0, xmax=frecuencia_con_mag_1- 0.02, linestyles='dashed', color='Blue', label='Ancho de banda')
+        #if frecuencia_con_mag_1 is not None:
+            #ax_mag.hlines(y=0, xmin=0, xmax=frecuencia_con_mag_1- 0.02, linestyles='dashed', color='Blue', label='Ancho de banda')
+        if Bandwidth is not None:
+            ax_mag.hlines(y=MagBD, xmin=0, xmax=Bandwidth, linestyles='dashed', color='Blue', label='Ancho de banda')    
         if  frecuencia_con_fase_minus_180 is not None:
             ax_mag.vlines(x=frecuencia_con_fase_minus_180, ymin=0, ymax=magnitud_en_frecuencia, linestyles='dashed', color='Green', label='Margen de ganancia')
         ax_mag.legend()
@@ -101,7 +113,8 @@ if uploaded_file is not None:
             st.pyplot(fig_mag)
             st.pyplot(fig_phase)
 
-            st.write(f"El ancho de banda del sistema es de {frecuencia_con_mag_1} rad/s")
+            #st.write(f"El ancho de banda del sistema es de {frecuencia_con_mag_1} rad/s")
+            st.write(f"El ancho de banda del sistema es de {Bandwidth} rad/s")
             if prueba > 0.2:
                 st.write(f"Existe un pico de resonancia de {Pico} dB y se encuentra en {frecuencia_del_pico} rad/s:")
             else:
